@@ -8,8 +8,17 @@ export const Footer = () => (
     <div className={`container ${styles.content}`}>
       <Link className={styles.logo} to="/" aria-label="Nice Gadgets home">
         <img
+          className={styles.lightLogo}
           src={assetUrl('img/figma-assets/logo-footer.svg')}
           alt="NICE GADGETS"
+          width="89"
+          height="32"
+        />
+        <img
+          className={styles.darkLogo}
+          src={assetUrl('img/figma-assets/logo-footer-dark.svg')}
+          alt=""
+          aria-hidden="true"
           width="89"
           height="32"
         />

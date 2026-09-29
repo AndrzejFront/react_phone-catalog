@@ -10,11 +10,7 @@ const pageTitle = category =>
       ? 'Favourites'
       : category.slice(0, 1).toUpperCase() + category.slice(1);
 
-const searchField = () => {
-  cy.get('button[aria-label="Open search and appearance"]').focus();
-
-  return cy.get('input[type="search"]');
-};
+const searchField = () => cy.get('input[type="search"]').should('be.visible');
 
 const expectVisibleProducts = products => {
   cy.get('#main-content article').should($cards => {

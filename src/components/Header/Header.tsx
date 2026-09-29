@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useShop } from '../../context/ShopContext';
 import { getProducts } from '../../api/products';
@@ -27,8 +27,8 @@ export const Header = () => {
   const { favorites, cartQuantity } = useShop();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [toolsOpen, setToolsOpen] = useState(false);
   const [dark, setDark] = useState(readTheme);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [detailsCategory, setDetailsCategory] = useState<Category | null>(null);
   const category = pathname.slice(1);
   const showSearch = ['phones', 'tablets', 'accessories', 'favorites'].includes(
@@ -37,7 +37,6 @@ export const Header = () => {
 
   useEffect(() => {
     setMenuOpen(false);
-    setToolsOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -83,16 +82,16 @@ export const Header = () => {
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && menuOpen) {
         setMenuOpen(false);
-        setToolsOpen(false);
+        menuButtonRef.current?.focus();
       }
     };
 
     document.addEventListener('keydown', closeOnEscape);
 
     return () => document.removeEventListener('keydown', closeOnEscape);
-  }, []);
+  }, [menuOpen]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
@@ -106,22 +105,20 @@ export const Header = () => {
 
   return (
     <header
-      className={`${styles.header} ${menuOpen ? styles.menuOpen : ''}`}
-      onMouseLeave={() => setToolsOpen(false)}
-      onBlur={event => {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
-          setToolsOpen(false);
-        }
-      }}
+      className={`${styles.header} ${showSearch ? styles.searchHeader : ''} ${menuOpen ? styles.menuOpen : ''}`}
     >
       <Link className={styles.logo} to="/" aria-label="Nice Gadgets home">
         <picture>
           <source
             media="(max-width: 1199px)"
-            srcSet={assetUrl('img/figma-assets/logo-mobile.svg')}
+            srcSet={assetUrl(
+              `img/figma-assets/logo-mobile${dark ? '-dark' : ''}.svg`,
+            )}
           />
           <img
-            src={assetUrl('img/figma-assets/logo-header.svg')}
+            src={assetUrl(
+              `img/figma-assets/logo-header${dark ? '-dark' : ''}.svg`,
+            )}
             alt="NICE GADGETS"
           />
         </picture>
@@ -137,7 +134,6 @@ export const Header = () => {
             to={link.to}
             end={link.to === '/'}
             onClick={() => setMenuOpen(false)}
-            onMouseEnter={() => setToolsOpen(true)}
             className={({ isActive }) =>
               isActive || link.to === `/${detailsCategory}` ? styles.active : ''
             }
@@ -146,38 +142,27 @@ export const Header = () => {
           </NavLink>
         ))}
       </nav>
-      <button
-        className={styles.toolsTrigger}
-        type="button"
-        aria-label="Open search and appearance"
-        aria-expanded={toolsOpen}
-        aria-controls="catalog-tools"
-        onFocus={() => setToolsOpen(true)}
-        onClick={() => setToolsOpen(true)}
-      >
-        Search and appearance
-      </button>
-      <div
-        id="catalog-tools"
-        className={`${styles.tools} ${toolsOpen || menuOpen ? styles.toolsOpen : ''}`}
-      >
-        {showSearch && <SearchField key={pathname} category={category} />}
+      {showSearch && (
+        <div className={styles.searchContainer}>
+          <SearchField key={pathname} category={category} />
+        </div>
+      )}
+      <div className={styles.actions}>
         <button
           type="button"
-          className={styles.themeButton}
+          className={styles.action}
           aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
+          aria-pressed={dark}
+          title={dark ? 'Switch to light theme' : 'Switch to dark theme'}
           onClick={() => setDark(value => !value)}
         >
           <Icon name={dark ? 'sun' : 'moon'} />
-          {dark ? 'Light theme' : 'Dark theme'}
         </button>
-      </div>
-      <div className={styles.actions}>
         <NavLink
           to="/favorites"
           aria-label={`Favorites, ${favorites.length} products`}
           className={({ isActive }) =>
-            `${styles.action} ${isActive ? styles.active : ''}`
+            `${styles.action} ${styles.shopAction} ${isActive ? styles.active : ''}`
           }
         >
           <Icon name="heart" />
@@ -189,7 +174,7 @@ export const Header = () => {
           to="/cart"
           aria-label={`Cart, ${cartQuantity} items`}
           className={({ isActive }) =>
-            `${styles.action} ${isActive ? styles.active : ''}`
+            `${styles.action} ${styles.shopAction} ${isActive ? styles.active : ''}`
           }
         >
           <Icon name="cart" />
@@ -198,6 +183,7 @@ export const Header = () => {
           )}
         </NavLink>
         <button
+          ref={menuButtonRef}
           className={`${styles.action} ${styles.menuButton}`}
           type="button"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}

@@ -24,6 +24,7 @@
 .navigation {
   display: flex;
   align-self: stretch;
+  flex-shrink: 0;
   gap: 64px;
   margin-right: auto;
   a {
@@ -100,63 +101,24 @@
   display: none;
 }
 
-.toolsTrigger {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  &:focus-visible {
-    right: 144px;
-    width: auto;
-    height: 32px;
-    clip-path: none;
-    padding-inline: 12px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-  }
-}
-
-.tools {
-  position: absolute;
-  top: 100%;
-  right: 128px;
-  display: none;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 16px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  box-shadow: 0 4px 12px rgb(49 50 55 / 12%);
-}
-
-.toolsOpen {
-  display: flex;
-}
-
-.themeButton {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 32px;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: var(--text);
-  white-space: nowrap;
+.searchContainer {
+  flex: 0 1 240px;
+  min-width: 160px;
 }
 
 @media (max-width: 1199px) {
   .header {
-    height: 48px;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 0 16px;
+    height: auto;
+    min-height: 48px;
   }
   .logo {
+    height: 48px;
     padding-inline: 16px;
   }
   .navigation {
+    height: 48px;
     gap: 32px;
   }
   .action {
@@ -167,8 +129,12 @@
     top: 10px;
     left: 24px;
   }
-  .tools {
-    right: 96px;
+  .searchContainer {
+    order: 1;
+    flex: 0 0 100%;
+    min-width: 0;
+    border-top: 1px solid var(--border);
+    padding: 7px 24px 8px;
   }
 }
 
@@ -182,22 +148,21 @@
   .navigation {
     display: none;
   }
-  .action:not(.menuButton) {
+  .shopAction {
     display: none;
   }
   .menuButton {
     display: flex;
   }
-  .toolsTrigger {
-    display: none;
-  }
-  .tools {
-    display: none;
+  .searchContainer {
+    padding-inline: 16px;
   }
   .open {
     position: fixed;
     inset: 48px 0 64px;
     display: flex;
+    height: auto;
+    overflow-y: auto;
     flex-direction: column;
     align-items: center;
     gap: 16px;
@@ -209,7 +174,7 @@
     }
   }
   .menuOpen {
-    .action:not(.menuButton) {
+    .shopAction {
       position: fixed;
       bottom: 0;
       display: flex;
@@ -217,10 +182,10 @@
       height: 64px;
       border-top: 1px solid var(--border);
       background: var(--surface);
-      &:first-child {
+      &:first-of-type {
         left: 0;
       }
-      &:nth-child(2) {
+      &:last-of-type {
         right: 0;
       }
     }
@@ -228,17 +193,8 @@
       top: 18px;
       left: calc(50% + 1px);
     }
-    .tools {
-      position: fixed;
-      top: 264px;
-      right: 16px;
-      left: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      padding: 0;
-      border: 0;
-      box-shadow: none;
-    }
+  }
+  .searchHeader .open {
+    top: 104px;
   }
 }

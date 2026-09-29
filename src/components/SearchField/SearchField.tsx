@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Icon } from '../Icon';
 import styles from './SearchField.module.scss';
@@ -7,6 +7,7 @@ export const SearchField = ({ category }: { category: string }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') || '';
   const [value, setValue] = useState(query);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setValue(query), [query]);
 
@@ -37,6 +38,7 @@ export const SearchField = ({ category }: { category: string }) => {
         Search {category}
       </label>
       <input
+        ref={inputRef}
         id="catalog-search"
         type="search"
         placeholder={`Search ${category}...`}
@@ -47,7 +49,10 @@ export const SearchField = ({ category }: { category: string }) => {
         <button
           type="button"
           aria-label="Clear search"
-          onClick={() => setValue('')}
+          onClick={() => {
+            setValue('');
+            inputRef.current?.focus();
+          }}
         >
           <Icon name="close" />
         </button>
