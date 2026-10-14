@@ -1,0 +1,1 @@
+import{d as a,j as t,I as c}from"./index-DY_s9YTB.js";const n="_back_15fid_1",o={back:n},i=()=>{const s=a();return t.jsxs("button",{className:o.back,type:"button",onClick:()=>s(-1),children:[t.jsx(c,{name:"left"}),"Back"]})};export{i as B};
