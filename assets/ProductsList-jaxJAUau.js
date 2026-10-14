@@ -1,0 +1,1 @@
+import{j as t}from"./index-CFqS8PgF.js";import{P as o}from"./ProductCard-DDR766kG.js";const r="_list_1283b_1",m={list:r},c=({products:i})=>t.jsx("div",{className:m.list,children:i.map(s=>t.jsx(o,{product:s},s.itemId))});export{c as P};

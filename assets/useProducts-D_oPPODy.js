@@ -1,0 +1,1 @@
+import{r as e,g as i}from"./index-CFqS8PgF.js";const p=()=>{const[a,o]=e.useState([]),[u,s]=e.useState(!0),[c,r]=e.useState(!1),[f,n]=e.useState(0);return e.useEffect(()=>{let t=!0;return s(!0),r(!1),i().then(l=>{t&&o(l)}).catch(()=>{t&&r(!0)}).finally(()=>{t&&s(!1)}),()=>{t=!1}},[f]),{products:a,loading:u,error:c,reload:()=>n(t=>t+1)}};export{p as u};
